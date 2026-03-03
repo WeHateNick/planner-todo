@@ -1,0 +1,47 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  &__header {
+    padding: 0 36px;
+    height: 64px;
+    background: var(--color-surface);
+    box-shadow: 0 1px 0 var(--color-border);
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text);
+  }
+
+  &__title-icon {
+    width: 32px;
+    height: 32px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    padding: 28px 36px;
+    flex: 1;
+    align-items: start;
+
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
+
+      .calendar { order: 2; }
+      .todo-list { order: 1; }
+    }
+  }
+}

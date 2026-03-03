@@ -1,0 +1,336 @@
+@use "sass:map";
+@use "sass:list";
+
+// Pastel chip colors cycling by position
+$chip-colors: (
+  1: (
+    #ede9fe,
+    #7c3aed,
+    #ddd6fe,
+  ),
+  2: (
+    #fce7f3,
+    #be185d,
+    #fbcfe8,
+  ),
+  3: (
+    #dbeafe,
+    #1d4ed8,
+    #bfdbfe,
+  ),
+  4: (
+    #d1fae5,
+    #065f46,
+    #a7f3d0,
+  ),
+  5: (
+    #fef3c7,
+    #92400e,
+    #fde68a,
+  ),
+);
+
+.calendar {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 20px 24px;
+    gap: 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__nav {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__nav-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 18px;
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: var(--color-primary-dim);
+      border-color: var(--color-primary-soft);
+      color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+    }
+  }
+
+  &__month-title {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    flex: 1;
+    color: var(--color-text);
+  }
+
+  &__year {
+    color: var(--color-text-muted);
+    font-weight: 500;
+    font-size: 17px;
+  }
+
+  &__today-btn {
+    padding: 7px 18px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--color-primary);
+    background: var(--color-primary-dim);
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+
+    &:hover {
+      background: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  &__day-name {
+    text-align: center;
+    padding: 12px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-text-faint);
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+
+    &:not(:last-child) {
+      border-right: 1px solid var(--color-border);
+    }
+  }
+
+  &__cell {
+    min-height: 92px;
+    padding: 10px 8px 8px;
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &:not(:nth-child(7n)) {
+      border-right: 1px solid var(--color-border);
+    }
+
+    &:nth-last-child(-n + 7) {
+      border-bottom: none;
+    }
+
+    &:hover:not(&--outside) {
+      background: var(--color-surface-hover);
+
+      .calendar__add-btn {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    &--outside {
+      cursor: default;
+      background: #f9faff;
+
+      .calendar__cell-num {
+        color: var(--color-text-faint);
+      }
+    }
+
+    &--today {
+      background: #f5f3ff;
+
+      .calendar__cell-num {
+        background: var(--color-primary);
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+      }
+
+      &:hover {
+        background: #eef0ff;
+      }
+    }
+
+    &--past:not(&--today) {
+      .calendar__cell-num {
+        color: var(--color-text-faint);
+      }
+    }
+  }
+
+  &__cell-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    align-self: flex-start;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  &__todos {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  // Cycle chip colors by nth-child
+  @for $i from 1 through 5 {
+    $bg: list.nth(map.get($chip-colors, $i), 1);
+    $text: list.nth(map.get($chip-colors, $i), 2);
+
+    &__todo-item:nth-child(#{$i}n) {
+      background: $bg;
+
+      .calendar__todo-check {
+        border-color: $text;
+        color: $text;
+      }
+
+      .calendar__todo-title {
+        color: $text;
+      }
+    }
+  }
+
+  &__todo-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px 3px 5px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 0;
+    transition: filter 0.12s;
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+
+    &--done {
+      opacity: 0.5;
+
+      .calendar__todo-title {
+        text-decoration: line-through;
+      }
+
+      .calendar__todo-check {
+        background: var(--color-success) !important;
+        border-color: var(--color-success) !important;
+        color: #fff !important;
+      }
+    }
+  }
+
+  &__todo-check {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    border: 1.5px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.12s;
+  }
+
+  &__todo-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  &__todo-delete {
+    opacity: 0;
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--color-danger);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity 0.12s,
+      background 0.12s;
+
+    &:hover {
+      background: var(--color-danger-dim);
+    }
+  }
+
+  &__todo-item:hover &__todo-delete {
+    opacity: 1;
+  }
+
+  &__add-btn {
+    position: absolute;
+    bottom: 7px;
+    right: 7px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+    color: #fff;
+    background: var(--color-primary);
+    opacity: 0;
+    transform: scale(0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity 0.15s,
+      transform 0.15s,
+      box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+
+    &:hover {
+      background: var(--color-primary-hover);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
+    }
+  }
+}
