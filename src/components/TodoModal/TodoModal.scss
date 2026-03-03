@@ -117,6 +117,30 @@
     }
   }
 
+  &__field--inline {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &__check-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    user-select: none;
+  }
+
+  &__checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
   &__date-preview {
     font-size: 12px;
     font-weight: 600;

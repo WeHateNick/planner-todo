@@ -12,12 +12,13 @@ function formatDisplayDate(dateStr) {
 export default function TodoModal({ date, todo, onSave, onClose }) {
   const [title, setTitle] = useState(todo?.title || '')
   const [selectedDate, setSelectedDate] = useState(date || todo?.date || '')
+  const [completed, setCompleted] = useState(todo?.completed || false)
 
   function handleSubmit(e) {
     e.preventDefault()
     const trimmed = title.trim()
     if (!trimmed || !selectedDate) return
-    onSave({ id: todo?.id || null, date: selectedDate, title: trimmed })
+    onSave({ id: todo?.id || null, date: selectedDate, title: trimmed, completed })
   }
 
   function handleBackdrop(e) {
@@ -62,6 +63,21 @@ export default function TodoModal({ date, todo, onSave, onClose }) {
               <span className="modal__date-preview">{formatDisplayDate(selectedDate)}</span>
             )}
           </div>
+
+          {todo && (
+            <div className="modal__field modal__field--inline">
+              <label className="modal__check-label" htmlFor="todo-done">
+                <input
+                  id="todo-done"
+                  type="checkbox"
+                  className="modal__checkbox"
+                  checked={completed}
+                  onChange={e => setCompleted(e.target.checked)}
+                />
+                Mark as done
+              </label>
+            </div>
+          )}
 
           <div className="modal__actions">
             <button type="button" className="modal__btn modal__btn--secondary" onClick={onClose}>

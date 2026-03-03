@@ -44,9 +44,9 @@ function App() {
 
   const closeModal = useCallback(() => setModal(null), [])
 
-  const saveTodo = useCallback(({ id, date, title }) => {
+  const saveTodo = useCallback(({ id, date, title, completed }) => {
     if (id) {
-      setTodos(prev => prev.map(t => t.id === id ? { ...t, date, title } : t))
+      setTodos(prev => prev.map(t => t.id === id ? { ...t, date, title, completed } : t))
     } else {
       setTodos(prev => [...prev, { id: Date.now(), date, title, completed: false }])
     }
