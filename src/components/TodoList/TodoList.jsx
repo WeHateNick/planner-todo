@@ -80,7 +80,7 @@ export default function TodoList({ todos, onAdd, onTodoClick, onTodoToggle, onTo
       if (lastCheckedId !== null) startClearing(lastCheckedId)
       setLastCheckedId(id)
     } else {
-      startClearing(id)
+      if (view === 'completed') startClearing(id)
       if (id === lastCheckedId) setLastCheckedId(null)
     }
     onTodoToggle(id)
